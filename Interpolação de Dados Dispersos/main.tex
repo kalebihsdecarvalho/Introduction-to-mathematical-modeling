@@ -1,0 +1,111 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{minted}
+
+\title{Interpolação de Dados Dispersos - Introdução a Modelagem Matemática}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{9.1 Exercício: Interpolação via Funções de Base Radial (RBF)}
+
+Considere o conjunto de dados abaixo constituído por pontos distintos $x_j \in \mathbb{R}$ e valores $f_j \in R$ associados a esses pontos. Determine uma função de base radial e avalie essa função nos pontos dados nos testes. Considere a seguinte função de base $\phi_{j}(x) = e^{-||x-x_j||^2}$
+
+\textbf{Lembrando:} Queremos encontrar uma função contínua $s_f : \mathbb{R}^2 \rightarrow \mathbb{R}$ tal que $s_{f}(x_i) = f_i$ para $1 \leq i \leq N$ dado por:
+
+\begin{center}
+\[
+\scalebox{1.2}{$\displaystyle f(x) = \sum_{j=1}^{N} \alpha_j \phi_j(x), \, x \in \mathbb{R}^2$}
+\]
+\end{center}
+
+ou seja, precisamos obter o conjunto de coeficientes $\{\alpha_j\}_{j=1}^N \subset \mathbb{R}$. Para isso, utilizamos as condições de interpolaçãoo e obtemos o seguinte conjunto de equações:
+
+\begin{center}
+\[
+\scalebox{1.2}{$\displaystyle f_i = \sum_{j=1}^{N} \alpha_j \phi_j(x_i), \, i = 1, 2, \ldots, N,$}
+\]
+\end{center}
+
+resultando no sistema linear $A\alpha = f$:
+
+\[
+\begin{bmatrix}
+\phi_1(x_1) & \phi_2(x_1) & \cdots & \phi_N(x_1) \\
+\phi_1(x_2) & \phi_2(x_2) & \cdots & \phi_N(x_2) \\
+\vdots & \vdots & \ddots & \vdots \\
+\phi_1(x_N) & \phi_2(x_N) & \cdots & \phi_N(x_N)
+\end{bmatrix}
+\begin{bmatrix}
+\alpha_1 \\ \alpha_2 \\ \vdots \\ \alpha_N
+\end{bmatrix}
+=
+\begin{bmatrix}
+f_1 \\ f_2 \\ \vdots \\ f_N
+\end{bmatrix}.
+\]
+
+Resolvendo o sistema linear acima, conseguimos avaliar a função $s_{f}(x)$ em qualquer ponto $x \in \mathbb{R}^2$.
+
+\textbf{Obs.:} Uma forma de construir facilmente a matriz de interpolação A:
+
+\begin{itemize}
+    \item Calcule a matriz de distância \( M \) entre todos os pontos dados através da função \texttt{distance\_matrix} contida no pacote \texttt{scipy.spatial};
+    \item Aplique a função de base \( \phi \) nessa matriz, nesse caso \( A = \phi(M) = e^{-M^2} \);
+\end{itemize}
+
+\textbf{Conjunto de dados:} Cada linha da matriz abaixo representa uma amostra do tipo $(x_{j}^1, x_{j}^2, f_j)$
+
+\begin{center}
+    \begin{minted}{python}
+    np.array([[-0.132435,  0.121322, -0.396841], 
+          [ 0.022206, -0.253028,  0.064272],
+          [ 0.189277,  0.246878,  0.518604],
+          [-0.353720, -0.062568, -0.891925],
+          [ 0.338860, -0.215555,  0.824920],
+          [-0.114211,  0.424858, -0.275816],
+          [-0.219019, -0.421707, -0.500739],
+          [ 0.477176,  0.174264,  0.960294],
+          [-0.498052,  0.205589, -0.948289],
+          [ 0.240728, -0.514422,  0.474110],
+          [ 0.178278,  0.568380,  0.333216],
+          [-0.538309, -0.311961, -0.875938],
+          [ 0.632472, -0.139047,  0.892913],
+          [-0.386499,  0.549756, -0.608870],
+          [-0.089393, -0.689840, -0.129753],
+          [ 0.549340,  0.462984,  0.738047],
+          [-0.739899,  0.030597, -0.728343],
+          [ 0.540129, -0.537500,  0.658981],
+          [-0.036162,  0.782046, -0.038058],
+          [-0.514630, -0.616699, -0.565767],
+          [ 0.815705,  0.109752,  0.539060],
+          [-0.691510,  0.481135, -0.599958],
+          [ 0.189052, -0.840354,  0.138870],
+          [ 0.437461,  0.763428,  0.356128],
+          [-0.855543, -0.272942, -0.398726],
+          [ 0.831365, -0.384112,  0.416118],
+          [-0.360294,  0.860904, -0.196213],
+          [-0.321659, -0.894294, -0.140011],
+          [ 0.856159,  0.449973,  0.332056],
+          [-0.951246,  0.250745, -0.140885],
+          [ 0.540838, -0.841127,  0.244945]])
+    \end{minted}
+
+\end{center}
+
+\textbf{Entrada:} Ponto $x \in \mathbb{R}^2$
+
+\textbf{Saída:} Valor da interpolação $s_{f}(x).$
+
+Para evitar qualquer tipo de arredondamento, utiliza a seguinte saída:
+
+\begin{center}
+    \begin{minted}{python}
+        print(str(value[:4]))
+    \end{minted}
+\end{center}
+\end{document}
